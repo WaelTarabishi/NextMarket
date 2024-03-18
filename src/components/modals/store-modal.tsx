@@ -19,7 +19,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, "Please Enter a name"),

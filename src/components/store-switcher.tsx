@@ -31,6 +31,7 @@ import { Store } from "@prisma/client";
 type PopoverTrigger = React.ComponentPropsWithRef<typeof PopoverTrigger>;
 interface StoreSwitcherProps extends PopoverTrigger {
   items: Store[];
+  className?: string;
 }
 
 export default function StoreSwitcher({
@@ -68,7 +69,9 @@ export default function StoreSwitcher({
           aria-expanded={open}
           aria-label="Select a store"
           className={cn("w-[200px] justify-between", className)}>
-          <StoreIcon className="mr-2 h-4 w-4" />
+          <div>
+            <StoreIcon className="mr-2 w-4 h-4 " />
+          </div>
           {currentStore?.label}
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -80,21 +83,25 @@ export default function StoreSwitcher({
             <CommandEmpty>No store found.</CommandEmpty>
             <CommandGroup heading="Stores">
               {formattedItems.map((store) => (
-                <CommandItem
-                  key={store.value}
-                  onSelect={() => onStoreSelect(store)}
-                  className="text-sm ">
-                  <StoreIcon className="mr-2 h-4 w-4" />
-                  {store.label}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
+                <div key={store.value} onClick={() => onStoreSelect(store)}>
+                  <CommandItem
+                    className={`text-sm  ${
                       currentStore?.value === store.value
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
+                        ? "text-black "
+                        : "text-slate-500"
+                    } `}>
+                    <StoreIcon className="mr-2 h-4 w-4" />
+                    {store.label}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4 text-green-500",
+                        currentStore?.value === store.value
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                </div>
               ))}
             </CommandGroup>
           </CommandList>
