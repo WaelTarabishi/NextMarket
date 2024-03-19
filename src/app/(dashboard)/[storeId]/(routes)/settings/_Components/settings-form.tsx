@@ -22,6 +22,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
+import ApiAlert from "@/components/ui/api-alert";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -52,8 +53,17 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
       toast.error("Something went wrong.");
     }
   };
-  // const onDelete
-  // console.log(open);
+  const OnDelete = async () => {
+    try {
+      await axios.delete(`/api/stores/${params.storeId}`);
+      router.refresh();
+      router.push("/");
+    } catch (err) {
+      console.log(err);
+      toast.error("Make sure you removed all productss and categories first.");
+    }
+  };
+
   return (
     <>
       <AlertModal
@@ -61,9 +71,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
         onClose={() => {
           setOpen(false);
         }}
-        onConfirm={() => {
-          return;
-        }}
+        onConfirm={() => OnDelete()}
         loading={form.formState.isSubmitting}
       />
       <div className="flex items-center justify-between">
@@ -83,19 +91,22 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
             <FormField
               name="name"
               control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Store name"
-                      {...field}
-                      disabled={form.formState.isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                console.log(field.value); // Log the value of the field
+                return (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Store name"
+                        {...field}
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           </div>
           <Button
@@ -106,6 +117,12 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
           </Button>
         </form>
       </Form>
+      <Separator />
+      <ApiAlert
+        title="NEXT_PUBLIC_API_URL"
+        description={`${origin}/api/${params.storeId}`}
+        variant="public"
+      />
     </>
   );
 };
