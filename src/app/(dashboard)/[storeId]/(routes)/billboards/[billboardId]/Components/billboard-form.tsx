@@ -22,8 +22,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import ApiAlert from "@/components/ui/api-alert";
-import { useOrigin } from "@/Hooks/use-origin";
 import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
@@ -40,8 +38,7 @@ interface BillboardFormProps {
 const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
-
+  const [loading, setLoading] = useState(false);
   const title = initialData ? "Edit billboard" : "Create billboard";
   const description = initialData ? "Edit a billboard" : "Add a new billboard";
   const toastMessage = initialData ? "Billboard updated" : "Billboard created";
@@ -66,25 +63,28 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
       } else {
         await axios.post(`/api/${params.storeId}/billboards`, data);
       }
-      router.refresh();
+      router.push(`/${params.storeId}/billboards`);
       toast.success(toastMessage);
+      router.refresh();
     } catch (err) {
       toast.error("Something went wrong.");
     }
   };
   const OnDelete = async () => {
     try {
+      setLoading(true);
       await axios.delete(
         `/api/${params.storeId}/billboards/${params.billboardId}`
       );
-      router.refresh();
-      router.push("/");
+      router.push(`/${params.storeId}/billboards`);
       toast.success("Billboard deleted.");
     } catch (err) {
       console.log(err);
       toast.error(
         "Please ensure that all categories associated with this billboard are removed before proceeding."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,7 +96,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
           setOpen(false);
         }}
         onConfirm={() => OnDelete()}
-        loading={form.formState.isSubmitting}
+        loading={loading}
       />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
@@ -161,12 +161,6 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
           </Button>
         </form>
       </Form>
-      <Separator />
-      <ApiAlert
-        title="NEXT_PUBLIC_API_URL"
-        description={`${origin}/api/${params.storeId}`}
-        variant="public"
-      />
     </>
   );
 };
