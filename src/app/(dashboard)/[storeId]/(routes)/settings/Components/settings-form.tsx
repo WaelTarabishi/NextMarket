@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Heading from "./Heading";
+import Heading from "@/components/ui/Heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Trash } from "lucide-react";
@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ApiAlert from "@/components/ui/api-alert";
+import { useOrigin } from "@/Hooks/use-origin";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -37,6 +38,7 @@ type SettingsFormValues = z.infer<typeof formSchema>;
 const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
+  const origin = useOrigin();
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
@@ -92,7 +94,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
               name="name"
               control={form.control}
               render={({ field }) => {
-                console.log(field.value); // Log the value of the field
+                // console.log(field.value); // Log the value of the field
                 return (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
