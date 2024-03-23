@@ -151,7 +151,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                 // console.log(field.value); // Log the value of the field
                 return (
                   <FormItem className="flex-[0.6]">
-                    <FormLabel>Billboard </FormLabel>
+                    <FormLabel>Billboard</FormLabel>
                     <Select
                       disabled={form.formState.isSubmitting}
                       onValueChange={field.onChange}

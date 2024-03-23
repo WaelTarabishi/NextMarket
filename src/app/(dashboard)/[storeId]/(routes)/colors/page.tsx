@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import prismadb from "@/lib/prismadb";
 
 import { ColorColumn } from "./Components/columns";
-import ColorClinet from "./Components/client";
+import ColorClinet from "./Components/Client";
 
 const ColorsPage = async ({ params }: { params: { storeId: string } }) => {
   const colors = await prismadb.color.findMany({

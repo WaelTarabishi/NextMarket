@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
+import { CldImage } from "next-cloudinary";
 
 const formSchema = z.object({
   label: z.string().min(1, "Label must be at least 1 character long"),
